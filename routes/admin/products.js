@@ -15,5 +15,6 @@ router.put("/product/:id", (req, res) =>
 router.delete("/product/delete/:id", (req, res) =>
     adminController.deleteProductById(req, res)
 );
+router.post("/user/add", (req, res) => adminController.addUser(req, res));
 
 module.exports = router;

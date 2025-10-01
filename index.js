@@ -8,6 +8,20 @@ const PORT = 3333;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+
+const sequelize = require("./util/db");
+const models = require("./models")();
+//models(); // Initialize models and associations
+//simulate logged in user
+app.use((req, res, next) => {
+  models.User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.error(err));
+});
 // Routes
 
 const productAdminRoutes = require("./routes/admin/products");
@@ -17,16 +31,10 @@ const productRoutes = require("./routes/products");
 app.use(productRoutes);
 
 
-
-const sequelize = require("./util/db");
-
-const models = require("./models");
-models(); // Initialize models and associations
-
 // Sync the models with the database and start the server
 
 sequelize
-  .sync()
+  .sync(/* {force: true} */)
   .then(() => {
     console.log("Tables created!");
     app.listen(PORT);
