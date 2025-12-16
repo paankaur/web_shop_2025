@@ -29,7 +29,10 @@ const productRoutes = require("./routes/products");
 app.use(productRoutes);
 
 const shopRoutes = require("./routes/shop");
-app.use(shopRoutes); 
+app.use(shopRoutes);
+
+const orderRoutes = require("./routes/order");
+app.use(orderRoutes);
 
 // Sync the models with the database and start the server
 
