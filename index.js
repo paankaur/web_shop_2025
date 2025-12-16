@@ -8,8 +8,6 @@ const PORT = 3333;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 const sequelize = require("./util/db");
 const models = require("./models")();
 //models(); // Initialize models and associations
@@ -30,13 +28,28 @@ app.use("/admin", productAdminRoutes);
 const productRoutes = require("./routes/products");
 app.use(productRoutes);
 
+const shopRoutes = require("./routes/shop");
+app.use(shopRoutes); 
 
 // Sync the models with the database and start the server
 
 sequelize
-  .sync(/* {force: true} */)
+  .sync({ /* force: true */ })
   .then(() => {
+    return models.User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return models.User.create({ name: "Lol", email: "lol@example.com" });
+    }
+    return user;
+  })
+  .then((user) => {
+    return user.createCart();
+  })
+  .then((cart) => {
     console.log("Tables created!");
+    console.log(cart);
     app.listen(PORT);
   })
   .catch((err) => {
